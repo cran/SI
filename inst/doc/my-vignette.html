@@ -12,7 +12,7 @@
 
 <meta name="author" content="Jinhong Du" />
 
-<meta name="date" content="2018-04-17" />
+<meta name="date" content="2018-09-23" />
 
 <title>Monte Carlo Integration</title>
 
@@ -214,7 +214,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Monte Carlo Integration</h1>
 <h4 class="author"><em>Jinhong Du</em></h4>
-<h4 class="date"><em>2018-04-17</em></h4>
+<h4 class="date"><em>2018-09-23</em></h4>
 
 
 
@@ -245,9 +245,13 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 \end{align*}\]</span> which means that we can use <span class="math inline">\(\hat{I}\)</span> to approximate <span class="math inline">\(I\)</span> better if we try more times (with large <span class="math inline">\(N\)</span>).</p>
 <p>To estimate the variance (or precision), we use the Central Limit Theorem and get <span class="math display">\[\begin{align*}
 \dfrac{\hat{p}-p}{Var(p)}&amp;=\dfrac{\hat{p}-p}{\sqrt{\dfrac{p(1-p)}{N}}}\xrightarrow{D}N(0,1)\\
-\dfrac{\hat{I}_1-I}{\sqrt{\frac{1}{N}}}&amp;\xrightarrow{D}N(0,[M(b-a)^2]p(1-p))
+\dfrac{\hat{I}_1-I}{\sqrt{\frac{1}{N}}}&amp;\xrightarrow{D}N(0,[M(b-a)]^2p(1-p))
 \end{align*}\]</span></p>
-<p>Therefore, the variance can be estimated by <span class="math display">\[Var(\hat{I}_1)\approx[M(b-a)^2]\hat{p}(1-\hat{p})\]</span></p>
+<p>Therefore, the variance can be estimated by <span class="math display">\[Var(\hat{I}_1)\approx \dfrac{1}{N}[M(b-a)]^2\hat{p}(1-\hat{p})\]</span></p>
+<p>For <span class="math inline">\(m\)</span>-dimension function on <span class="math inline">\([a_1,b_1]\times \cdots \times[a_m,b_m]\)</span>, we also have <span class="math display">\[\begin{align*}
+\hat{I}_1&amp;=\hat{p}\prod\limits_{i=1}^m(b_i-a_i)\\
+Var(\hat{I}_1)&amp;\approx \dfrac{1}{N}\left[M\prod\limits_{i=1}^m(b_i-a_i)\right]^2\hat{p}(1-\hat{p})
+\end{align*}\]</span></p>
 <p>In <strong>SI</strong> package, use the following code to carry out stochastic point method.</p>
 <pre><code>## To integrate exp(x) from -1 to 1
 set.seed(0)
@@ -272,7 +276,11 @@ I&amp;=(b-a)\mathbb{E}[h(U)]
 \dfrac{\hat{I}_2-I}{\sqrt{\frac{1}{N}}}&amp;\xrightarrow{D}N(0,(b-a)^2Var[h(U)])\\
 \hat{I}_2&amp;\xrightarrow{D}N(I,\dfrac{(b-a)^2}{N}Var[h(U)])
 \end{align*}\]</span> where <span class="math display">\[Var[h(U)]=\int_a^b\{h(u)-\mathbb{E}[h(U)]\}^2\dfrac{1}{b-a}\mathrm{d}u\]</span></p>
-<p>Since it can be estiamted by smaple variance <span class="math display">\[Var[h(U)]\approx \dfrac{1}{N}\sum\limits_{i=1}^N(Y_i-\overline{Y})^2\]</span> we can estimate the variance of <span class="math inline">\(\hat{I}_2\)</span> by <span class="math display">\[Var(\hat{I}_2)\approx \dfrac{(b-a)^2}{N^2}\sum\limits_{i=1}^N(Y_i-\overline{Y})^2\]</span></p>
+<p>Since it can be estiamted by sample variance <span class="math display">\[Var[h(U)]\approx \dfrac{1}{N}\sum\limits_{i=1}^N(Y_i-\overline{Y})^2\]</span> we can estimate the variance of <span class="math inline">\(\hat{I}_2\)</span> by <span class="math display">\[Var(\hat{I}_2)\approx \dfrac{(b-a)^2}{N^2}\sum\limits_{i=1}^N(Y_i-\overline{Y})^2\]</span></p>
+<p>For <span class="math inline">\(m\)</span>-dimension function on <span class="math inline">\([a_1,b_1]\times \cdots \times[a_m,b_m]\)</span>, we also have <span class="math display">\[\begin{align*}
+\hat{I}_2&amp;=\dfrac{1}{N}\prod\limits_{i=1}^m(b_i-a_i)\sum\limits_{i=1}^Nh(U_i)\\
+Var(\hat{I}_2)&amp;\approx \dfrac{1}{N}\left[\prod\limits_{i=1}^m(b_i-a_i)\right]^2\sum\limits_{i=1}^N(Y_i-\overline{Y})^2
+\end{align*}\]</span></p>
 <p>In <strong>SI</strong> package, use the following code to carry out mean value method.</p>
 <pre><code>## To integrate exp(x) from -1 to 1
 set.seed(0)
